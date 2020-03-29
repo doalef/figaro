@@ -1,6 +1,6 @@
-@import '~antd/dist/antd.dark.css';
 body {
     margin: 0;
+    background-color: #ececec !important;
 }
 
 .logo {

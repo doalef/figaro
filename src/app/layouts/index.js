@@ -9,7 +9,9 @@ class DefaultLayout extends React.Component {
     render() {
         return (
             <div>
-                <MenuLayout>fucking hell</MenuLayout>
+                <MenuLayout>
+                    
+                </MenuLayout>
             </div>
         );
     }

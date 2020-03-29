@@ -5,6 +5,7 @@ const loading = () => <div className="animated fadeIn pt-3 text-center">Loading.
 
 // Containers
 const DefaultLayout = React.lazy(() => import("./layouts"));
+const Login = React.lazy(() => import("./containers/pages/Login"));
 
 class App extends Component {
     render() {
@@ -12,7 +13,8 @@ class App extends Component {
             <BrowserRouter>
                 <React.Suspense fallback={loading()}>
                     <Switch>
-                        <Route path="/" name="Home" render={props => <DefaultLayout {...props} />} />
+                        <Route exact path="/" name="Home" render={props => <DefaultLayout {...props} />} />
+                        <Route exact path="/login" name="Login" render={props => <Login {...props} />} />
                     </Switch>
                 </React.Suspense>
             </BrowserRouter>

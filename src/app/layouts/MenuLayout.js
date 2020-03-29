@@ -1,11 +1,13 @@
 import React from "react";
-import { Link, withRouter } from "react-router-dom";
+import { Link, withRouter, Redirect } from "react-router-dom";
+import { connect } from "react-redux";
+
 import { Layout, Menu, Avatar, Dropdown, PageHeader } from "antd";
 import { MenuUnfoldOutlined, MenuFoldOutlined, PoweroffOutlined } from "@ant-design/icons";
 import items from "../../_nav.js";
-import withBreadcrumbs from "react-router-breadcrumbs-hoc";
 import routes from "../../routes";
 const { Header, Content, Sider } = Layout;
+
 class MenuLayout extends React.Component {
     constructor(props) {
         super(props);
@@ -28,7 +30,7 @@ class MenuLayout extends React.Component {
                 breadcrumbName: rest.name
             }));
     }
-    
+
     toggle = () => {
         this.setState({
             collapsed: !this.state.collapsed
@@ -84,56 +86,74 @@ class MenuLayout extends React.Component {
 
     render() {
         return (
-            <Layout style={{ height: "100vh" }}>
-                <Sider
-                    breakpoint="sm"
-                    zeroWidthTriggerStyle={{ display: "none" }}
-                    onBreakpoint={broken => {
-                        this.setState({ broken, collapsed: broken });
-                    }}
-                    collapsedWidth={this.state.broken ? 0 : 80}
-                    collapsible
-                    collapsed={this.state.collapsed}>
-                    <div className="logo" />
-                    <Menu theme={"dark"} mode="inline">
-                        {this.renderMenuItems()}
-                    </Menu>
-                </Sider>
-                <Layout>
-                    <Header
-                        style={{ padding: 0, background: "white", boxShadow: "0 1px 4px rgba(0,21,41,.08)" }}>
-                        <React.Fragment>
-                            {React.createElement(
-                                this.state.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
-                                {
-                                    className: "trigger",
-                                    onClick: this.toggle
-                                }
-                            )}
-                            <div style={{ float: "right", paddingRight: 16 }}>
-                                <Dropdown overlay={this.overlay()}>
-                                    <Avatar
-                                        size="large"
-                                        src="https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png"
-                                    />
-                                </Dropdown>
-                            </div>
-                        </React.Fragment>
-                    </Header>
-                    <PageHeader
-                        style={{ background: "white" }}
-                        breadcrumb={{ routes: this.state.crumbs }}
-                    />
-                    <Content style={{ margin: "24px 16px 0" }}>
-                        {this.props.children ? (
-                            <div className="site-layout-content" style={{ padding: 24 }}>
-                                {this.props.children}
-                            </div>
-                        ) : null}
-                    </Content>
+            <React.Fragment>
+                {!this.props.user && <Redirect to="/login" />}
+                <Layout style={{ height: "100vh" }}>
+                    <Sider
+                        breakpoint="sm"
+                        zeroWidthTriggerStyle={{ display: "none" }}
+                        onBreakpoint={broken => {
+                            this.setState({ broken, collapsed: broken });
+                        }}
+                        collapsedWidth={this.state.broken ? 0 : 80}
+                        collapsible
+                        collapsed={this.state.collapsed}>
+                        <div className="logo" />
+                        <Menu theme={"dark"} mode="inline">
+                            {this.renderMenuItems()}
+                        </Menu>
+                    </Sider>
+                    <Layout>
+                        <Header
+                            style={{
+                                padding: 0,
+                                background: "white",
+                                boxShadow: "0 1px 4px rgba(0,21,41,.08)"
+                            }}>
+                            <React.Fragment>
+                                {React.createElement(
+                                    this.state.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
+                                    {
+                                        className: "trigger",
+                                        onClick: this.toggle
+                                    }
+                                )}
+                                <div style={{ float: "right", paddingRight: 16 }}>
+                                    <Dropdown overlay={this.overlay()}>
+                                        <Avatar
+                                            size="large"
+                                            src="https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png"
+                                        />
+                                    </Dropdown>
+                                </div>
+                            </React.Fragment>
+                        </Header>
+                        <PageHeader
+                            style={{ background: "white" }}
+                            breadcrumb={{ routes: this.state.crumbs }}
+                        />
+                        <Content style={{ margin: "24px 16px 0" }}>
+                            {this.props.children ? (
+                                <div className="site-layout-content" style={{ padding: 24 }}>
+                                    {this.props.children}
+                                </div>
+                            ) : null}
+                        </Content>
+                    </Layout>
                 </Layout>
-            </Layout>
+            </React.Fragment>
         );
     }
 }
-export default withBreadcrumbs()(withRouter(MenuLayout));
+
+const mapDispatchToProps = () => {
+    return {};
+};
+
+const mapStateToProps = state => {
+    return {
+        user: state.user
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps())(withRouter(MenuLayout));
